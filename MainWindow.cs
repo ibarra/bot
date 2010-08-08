@@ -4,10 +4,11 @@ using Sharkbite.Irc;
 
 namespace Bot
 {
+	
 	public partial class MainWindow: Gtk.Window
 	{	
 		private Connection connection;
-		static string BotName = "Kakaroto";
+		public static string BotName = "Kakaroto";
 		
 		public MainWindow (): base (Gtk.WindowType.Toplevel)
 		{
@@ -46,6 +47,7 @@ namespace Bot
 					
 					connection.Listener.OnRegistered += new  RegisteredEventHandler  ( OnRegistered );
 					connection.Listener.OnPublic += new  PublicMessageEventHandler  ( OnPublic );
+					connection.Listener.OnPrivate += new PrivateMessageEventHandler (OnPrivate );					
 					
 				}else{				
 					
@@ -63,9 +65,16 @@ namespace Bot
 		
 		public void OnPublic(UserInfo user, string channel, string message)
 		{			
-			//call other class for information. 
-			connection.Sender.PublicMessage  ( "#gultij",BotName + "yo tengo el poder , pajitron COME POLLAS" );
-			connection.Sender.PublicMessage("#gultij",  message.ToString());
+			Calls c = new Calls();
+			string ch = c.CallPublic(user.Nick.ToString(), message, channel, connection);		
+			textviewLog.Buffer.Text = ch;
+			
+		}
+		public void OnPrivate(UserInfo user, string message)
+		{
+			Calls c = new Calls();
+			c.CallPrivate(user.Nick.ToString(), connection);			
+		
 		}
 		
 		public void OnRegistered()
@@ -74,7 +83,7 @@ namespace Bot
 				
 				Identd.Stop();
 				connection.Sender.Join("#gultij");
-				
+				connection.Sender.Nick("kakarotos");
 				connection.Sender.PublicMessage("#gultij", "yo tengo el poder");
 				
 			}catch(Exception e){
