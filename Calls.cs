@@ -20,8 +20,8 @@ namespace Bot
 		
 		public string CallPublic(string user, string message, string channel, Connection connection){
 			
-			if (message.Contains("kakaroto") == true)
-			{
+			if (message.Contains("kakaroto") == true)			{
+				
 				connection.Sender.PublicMessage(channel, user + " " + "Cuando digas mi nombre lavate la boca ingenuo mortal");
 				Console.WriteLine(channel);				
 				                                
@@ -58,7 +58,7 @@ namespace Bot
 				
 			}
 			
-			return "-";
+			return user + "-" + message + "-" + channel;
 			
 		}
 		
